@@ -475,6 +475,7 @@ class AccountInvoice(models.Model):
         test = pac_info['test']
         for inv in self:
             cfdi = inv.l10n_mx_edi_cfdi.decode('UTF-8')
+            _logger.debug("cfdi: %s",cfdi)
             try:
                 client = Client(url, timeout=20)
                 if(test):
