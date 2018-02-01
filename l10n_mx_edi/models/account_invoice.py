@@ -509,15 +509,15 @@ class AccountInvoice(models.Model):
             key_password = certificate_id.password
             rfc_emisor = self.company_id
             cancelled=False
-            if(test):
-                cancelled=True
-                msg='Este comprobante se cancelo en modo pruebas'
-                code='201'
-                inv._l10n_mx_edi_post_cancel_process(cancelled, code, msg)
-                continue
+            # if(test):
+            #     cancelled=True
+            #     msg='Este comprobante se cancelo en modo pruebas'
+            #     code='201'
+            #     inv._l10n_mx_edi_post_cancel_process(cancelled, code, msg)
+            #     continue
             try:
                 client = Client(url, timeout=20)
-                response = client.service.cancelar(contract,username, password,rfc_emisor,uuids,cer_pem, key_pem, key_password)
+                response = client.service.cancelar(contract,username, password,rfc_emisor.vat,uuids,cer_pem, key_pem, key_password)
             except Exception as e:
                 inv.l10n_mx_edi_log_error(str(e))
                 continue
