@@ -475,7 +475,6 @@ class AccountInvoice(models.Model):
         test = pac_info['test']
         for inv in self:
             cfdi = inv.l10n_mx_edi_cfdi.decode('UTF-8')
-            _logger.debug("cfdi: %s",cfdi)
             try:
                 client = Client(url, timeout=20)
                 if(test):
@@ -494,6 +493,7 @@ class AccountInvoice(models.Model):
     def _l10n_mx_edi_prodigia_cancel(self, pac_info):
         '''CANCEL Prodigia.
         '''
+
         url = pac_info['url']
         username = pac_info['username']
         password = pac_info['password']
@@ -507,11 +507,17 @@ class AccountInvoice(models.Model):
             key_pem = base64.encodestring(certificate_id.get_pem_key(
                 certificate_id.key, certificate_id.password)).decode('UTF-8')
             key_password = certificate_id.password
-            receptor_rfc= inv.l10n_mx_edi_cfdi_customer_rfc
+            rfc_emisor = self.company_id
             cancelled=False
+            if(test):
+                cancelled=True
+                msg='Este comprobante se cancelo en modo pruebas'
+                code='201'
+                inv._l10n_mx_edi_post_cancel_process(cancelled, code, msg)
+                continue
             try:
                 client = Client(url, timeout=20)
-                response = client.service.cancelar(contract,username, password,receptor_rfc,uuids,cer_pem, key_pem, key_password)
+                response = client.service.cancelar(contract,username, password,rfc_emisor,uuids,cer_pem, key_pem, key_password)
             except Exception as e:
                 inv.l10n_mx_edi_log_error(str(e))
                 continue
