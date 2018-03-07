@@ -15,10 +15,10 @@ class ResCompany(models.Model):
         inverse='_inverse_l10n_mx_edi_locality')
 
     l10n_mx_edi_pac = fields.Selection(
-        selection=[('finkok', 'Finkok'), ('solfact', 'Solucion Factible')],
+        selection=[('finkok', 'Finkok'), ('solfact', 'Solucion Factible'),('prodigia','Prodigia')],
         string='PAC',
         help='The PAC that will sign/cancel the invoices',
-        default='finkok')
+        default='prodigia')
     l10n_mx_edi_pac_test_env = fields.Boolean(
         string='PAC test environment',
         help='Enable the usage of test credentials',
@@ -29,6 +29,9 @@ class ResCompany(models.Model):
     l10n_mx_edi_pac_password = fields.Char(
         string='PAC password',
         help='The password used to request the seal from the PAC')
+    l10n_mx_edi_pac_contract = fields.Char(
+        string='PAC contract',
+        help='The contract ID from the PAC')
     l10n_mx_edi_certificate_ids = fields.Many2many('l10n_mx_edi.certificate',
         string='Certificates')
 
